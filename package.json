@@ -1,6 +1,6 @@
 {
   "name": "aiblocks-base-sdk",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Low level aiblocks support library",
   "main": "./lib/index.js",
   "types": "./types/index.d.ts",
