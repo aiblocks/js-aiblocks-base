@@ -15,12 +15,12 @@ describe('TransactionEnvelope', function() {
   });
 
   it('calculates correct hash with non-utf8 strings', function(done) {
-    // a84d534b3742ad89413bdbf259e02fa4c5d039123769e9bcc63616f723a2bcd5
+    // f0d17c040f51427fef80710d1ccd31a2b181eb47e529cb371f5670660427d6bd
     let xdr =
       'AAAAAAtjwtJadppTmm0NtAU99BFxXXfzPO1N/SqR43Z8aXqXAAAAZAAIj6YAAAACAAAAAAAAAAEAAAAB0QAAAAAAAAEAAAAAAAAAAQAAAADLa6390PDAqg3qDLpshQxS+uVw3ytSgKRirQcInPWt1QAAAAAAAAAAA1Z+AAAAAAAAAAABfGl6lwAAAEBC655+8Izq54MIZrXTVF/E1ycHgQWpVcBD+LFkuOjjJd995u/7wM8sFqQqambL0/ME2FTOtxMO65B9i3eAIu4P';
     var tx = new StellarBase.Transaction(xdr, StellarBase.Networks.PUBLIC);
     expect(tx.hash().toString('hex')).to.be.equal(
-      'a84d534b3742ad89413bdbf259e02fa4c5d039123769e9bcc63616f723a2bcd5'
+      'f0d17c040f51427fef80710d1ccd31a2b181eb47e529cb371f5670660427d6bd'
     );
     done();
   });
