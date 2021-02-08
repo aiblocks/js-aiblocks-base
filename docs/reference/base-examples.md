@@ -16,26 +16,26 @@ is giving the new account 25 XLM as its initial balance.
 
 
 ```javascript
-const server = new StellarSdk.Server('https://millennium-testnet.aiblocks.io')
-const source = StellarSdk.Keypair.fromSecret('SA3W53XXG64ITFFIYQSBIJDG26LMXYRIMEVMNQMFAQJOYCZACCYBA34L')
-const destination = StellarSdk.Keypair.random()
+const server = new AiBlocksSdk.Server('https://millennium-testnet.aiblocks.io')
+const source = AiBlocksSdk.Keypair.fromSecret('SA3W53XXG64ITFFIYQSBIJDG26LMXYRIMEVMNQMFAQJOYCZACCYBA34L')
+const destination = AiBlocksSdk.Keypair.random()
 
 server.accounts()
   .accountId(source.publicKey())
   .call()
   .then(({ sequence }) => {
-    const account = new StellarSdk.Account(source.publicKey(), sequence)
-    const transaction = new StellarSdk.TransactionBuilder(account, {
-      fee: StellarSdk.BASE_FEE,
+    const account = new AiBlocksSdk.Account(source.publicKey(), sequence)
+    const transaction = new AiBlocksSdk.TransactionBuilder(account, {
+      fee: AiBlocksSdk.BASE_FEE,
       networkPassphrase: Networks.TESTNET
     })
-      .addOperation(StellarSdk.Operation.createAccount({
+      .addOperation(AiBlocksSdk.Operation.createAccount({
         destination: destination.publicKey(),
         startingBalance: '25'
       }))
       .setTimeout(30)
       .build()
-    transaction.sign(StellarSdk.Keypair.fromSecret(source.secret()))
+    transaction.sign(AiBlocksSdk.Keypair.fromSecret(source.secret()))
     return server.submitTransaction(transaction)
   })
   .then(results => {
@@ -46,24 +46,24 @@ server.accounts()
 ```
 
 ## Assets
-Object of the `Asset` class represents an asset in the Stellar network. Right now there are 3 possible types of assets in the Stellar network:
+Object of the `Asset` class represents an asset in the AiBlocks network. Right now there are 3 possible types of assets in the AiBlocks network:
 * native `XLM` asset (`ASSET_TYPE_NATIVE`),
 * issued assets with asset code of maximum 4 characters (`ASSET_TYPE_CREDIT_ALPHANUM4`),
 * issued assets with asset code of maximum 12 characters (`ASSET_TYPE_CREDIT_ALPHANUM12`).
 
 To create a new native asset representation use static `native()` method:
 ```js
-var nativeAsset = StellarSdk.Asset.native();
+var nativeAsset = AiBlocksSdk.Asset.native();
 var isNative = nativeAsset.isNative(); // true
 ```
 
 To represent an issued asset you need to create a new object of type `Asset` with an asset code and issuer:
 ```js
 // Creates TEST asset issued by GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB
-var testAsset = new StellarSdk.Asset('TEST', 'GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB');
+var testAsset = new AiBlocksSdk.Asset('TEST', 'GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB');
 var isNative = testAsset.isNative(); // false
 // Creates Google stock asset issued by GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB
-var googleStockAsset = new StellarSdk.Asset('US38259P7069', 'GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB');
+var googleStockAsset = new AiBlocksSdk.Asset('US38259P7069', 'GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB');
 ```
 
 
@@ -79,22 +79,22 @@ In the example below we're sending 1000 XLM (at max) from `GABJLI6IVBKJ7HIC5NN7H
 The [path payment](https://www.stellar.org/developers/guides/concepts/list-of-operations.html#path-payment) will cause the destination address to get 5.5 GBP. It will cost the sender no more than 1000 XLM. In this example there will be 3 exchanges, XLM -> USD, USD-> EUR, EUR->GBP.
 
 ```js
-var keypair = StellarSdk.Keypair.fromSecret(secretString);
+var keypair = AiBlocksSdk.Keypair.fromSecret(secretString);
 
-var source = new StellarSdk.Account(keypair.publicKey(), "46316927324160");
-var transaction = new StellarSdk.TransactionBuilder(source, {
-    fee: StellarSdk.BASE_FEE,
+var source = new AiBlocksSdk.Account(keypair.publicKey(), "46316927324160");
+var transaction = new AiBlocksSdk.TransactionBuilder(source, {
+    fee: AiBlocksSdk.BASE_FEE,
     networkPassphrase: Networks.TESTNET
   })
-  .addOperation(StellarSdk.Operation.pathPayment({
-      sendAsset: StellarSdk.Asset.native(),
+  .addOperation(AiBlocksSdk.Operation.pathPayment({
+      sendAsset: AiBlocksSdk.Asset.native(),
       sendMax: "1000",
       destination: 'GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB',
-      destAsset: new StellarSdk.Asset('GBP', 'GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW'),
+      destAsset: new AiBlocksSdk.Asset('GBP', 'GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW'),
       destAmount: "5.50",
       path: [
-        new StellarSdk.Asset('USD', 'GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB'),
-        new StellarSdk.Asset('EUR', 'GDTNXRLOJD2YEBPKK7KCMR7J33AAG5VZXHAJTHIG736D6LVEFLLLKPDL')
+        new AiBlocksSdk.Asset('USD', 'GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB'),
+        new AiBlocksSdk.Asset('EUR', 'GDTNXRLOJD2YEBPKK7KCMR7J33AAG5VZXHAJTHIG736D6LVEFLLLKPDL')
       ]
   }))
   .setTimeout(30)
@@ -126,22 +126,22 @@ In each example, we'll use the root account.
 
 
 ```js
-var rootKeypair = StellarSdk.Keypair.fromSecret("SBQWY3DNPFWGSZTFNV4WQZLBOJ2GQYLTMJSWK3TTMVQXEY3INFXGO52X")
-var account = new StellarSdk.Account(rootkeypair.publicKey(), "46316927324160");
+var rootKeypair = AiBlocksSdk.Keypair.fromSecret("SBQWY3DNPFWGSZTFNV4WQZLBOJ2GQYLTMJSWK3TTMVQXEY3INFXGO52X")
+var account = new AiBlocksSdk.Account(rootkeypair.publicKey(), "46316927324160");
 
 var secondaryAddress = "GC6HHHS7SH7KNUAOBKVGT2QZIQLRB5UA7QAGLA3IROWPH4TN65UKNJPK";
 
-var transaction = new StellarSdk.TransactionBuilder(account, {
-    fee: StellarSdk.BASE_FEE,
+var transaction = new AiBlocksSdk.TransactionBuilder(account, {
+    fee: AiBlocksSdk.BASE_FEE,
     networkPassphrase: Networks.TESTNET
   })
-  .addOperation(StellarSdk.Operation.setOptions({
+  .addOperation(AiBlocksSdk.Operation.setOptions({
     signer: {
       ed25519PublicKey: secondaryAddress,
       weight: 1
     }
   }))
-  .addOperation(StellarSdk.Operation.setOptions({
+  .addOperation(AiBlocksSdk.Operation.setOptions({
     masterWeight: 1, // set master key weight
     lowThreshold: 1,
     medThreshold: 2, // a payment is medium threshold
@@ -154,19 +154,19 @@ transaction.sign(rootKeypair); // only need to sign with the root signer as the 
 
 // now create a payment with the account that has two signers
 
-var transaction = new StellarSdk.TransactionBuilder(account, {
-      fee: StellarSdk.BASE_FEE,
+var transaction = new AiBlocksSdk.TransactionBuilder(account, {
+      fee: AiBlocksSdk.BASE_FEE,
       networkPassphrase: Networks.TESTNET
     })
-    .addOperation(StellarSdk.Operation.payment({
+    .addOperation(AiBlocksSdk.Operation.payment({
         destination: "GBTVUCDT5CNSXIHJTDHYSZG3YJFXBAJ6FM4CKS5GKSAWJOLZW6XX7NVC",
-        asset: StellarSdk.Asset.native(),
+        asset: AiBlocksSdk.Asset.native(),
         amount: "2000" // 2000 XLM
     }))
     .setTimeout(30)
     .build();
 
-var secondKeypair = StellarSdk.Keypair.fromSecret("SAMZUAAPLRUH62HH3XE7NVD6ZSMTWPWGM6DS4X47HLVRHEBKP4U2H5E7");
+var secondKeypair = AiBlocksSdk.Keypair.fromSecret("SAMZUAAPLRUH62HH3XE7NVD6ZSMTWPWGM6DS4X47HLVRHEBKP4U2H5E7");
 
 // now we need to sign the transaction with both the root and the secondaryAddress
 transaction.sign(rootKeypair);

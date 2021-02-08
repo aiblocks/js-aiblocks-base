@@ -11,38 +11,38 @@ that pays the [fee](https://stellar.org/developers/learn/concepts/fees.html) and
 Transactions are made up of one or more [operations](https://stellar.org/developers/learn/concepts/operations.html). Each operation also has a source account, which defaults to the transaction's source account.
 
 
-## [TransactionBuilder](https://github.com/stellar/js-stellar-base/blob/master/src/transaction_builder.js)
+## [TransactionBuilder](https://github.com/aiblocks/js-aiblocks-base/blob/master/src/transaction_builder.js)
 
 The `TransactionBuilder` class is used to construct new transactions. TransactionBuilder is given an account that is used as transaction's "source account".
-The transaction will use the current sequence number of the given [Account](https://github.com/stellar/js-stellar-base/blob/master/src/account.js) object as its sequence number and increments
+The transaction will use the current sequence number of the given [Account](https://github.com/aiblocks/js-aiblocks-base/blob/master/src/account.js) object as its sequence number and increments
 the given account's sequence number when `build()` is called on the `TransactionBuilder`.
 
 Operations can be added to the transaction calling `addOperation(operation)` for each operation you wish to add to the transaction.
-See [operation.js](https://github.com/stellar/js-stellar-base/blob/master/src/operation.js) for a list of possible operations you can add.
+See [operation.js](https://github.com/aiblocks/js-aiblocks-base/blob/master/src/operation.js) for a list of possible operations you can add.
 `addOperation(operation)` returns the current `TransactionBuilder` object so you can chain multiple calls.
 
 After adding the desired operations, call the `build()` method on the `TransactionBuilder`.
-This will return a fully constructed [Transaction](https://github.com/stellar/js-stellar-base/blob/master/src/transaction.js).
-The returned transaction will contain the sequence number of the source account. This transaction is unsigned. You must sign it before it will be accepted by the Stellar network.
+This will return a fully constructed [Transaction](https://github.com/aiblocks/js-aiblocks-base/blob/master/src/transaction.js).
+The returned transaction will contain the sequence number of the source account. This transaction is unsigned. You must sign it before it will be accepted by the AiBlocks network.
 
 
 ```js
-// StellarBase.Network.usePublicNetwork(); if this transaction is for the public network
+// AiBlocksBase.Network.usePublicNetwork(); if this transaction is for the public network
 // Create an Account object from an address and sequence number.
-var account=new StellarBase.Account("GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD","2319149195853854");
+var account=new AiBlocksBase.Account("GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD","2319149195853854");
 
-var transaction = new StellarBase.TransactionBuilder(account, {
-        fee: StellarBase.BASE_FEE,
+var transaction = new AiBlocksBase.TransactionBuilder(account, {
+        fee: AiBlocksBase.BASE_FEE,
         networkPassphrase: Networks.TESTNET
     })
         // add a payment operation to the transaction
-        .addOperation(StellarBase.Operation.payment({
+        .addOperation(AiBlocksBase.Operation.payment({
                 destination: "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
-                asset: StellarBase.Asset.native(),
+                asset: AiBlocksBase.Asset.native(),
                 amount: "100.50"  // 100.50 XLM
             }))
         // add a set options operation to the transaction
-        .addOperation(StellarBase.Operation.setOptions({
+        .addOperation(AiBlocksBase.Operation.setOptions({
                 signer: {
                     ed25519PublicKey: secondAccountAddress,
                     weight: 1
@@ -70,7 +70,7 @@ the correct value.  So, if you're submitting many transactions quickly, you will
 
 ## Adding Memos
 Transactions can contain a "memo" field you can use to attach additional information to the transaction. You can do this
-by passing a [memo](https://github.com/stellar/js-stellar-base/blob/master/src/memo.js) object when you construct the TransactionBuilder.
+by passing a [memo](https://github.com/aiblocks/js-aiblocks-base/blob/master/src/memo.js) object when you construct the TransactionBuilder.
 There are 5 types of memos:
 * `Memo.none` - empty memo,
 * `Memo.text` - 28-byte ascii encoded string memo,
@@ -80,14 +80,14 @@ There are 5 types of memos:
 
 ```js
 var memo = Memo.text('Happy birthday!');
-var transaction = new StellarBase.TransactionBuilder(account, {
+var transaction = new AiBlocksBase.TransactionBuilder(account, {
     memo: memo,
-    fee: StellarBase.BASE_FEE,
+    fee: AiBlocksBase.BASE_FEE,
     networkPassphrase: Networks.TESTNET
 })
-        .addOperation(StellarBase.Operation.payment({
+        .addOperation(AiBlocksBase.Operation.payment({
                 destination: "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
-                asset: StellarBase.Asset.native(),
+                asset: AiBlocksBase.Asset.native(),
                 amount: "2000"
             }))
         .setTimeout(30)
@@ -95,7 +95,7 @@ var transaction = new StellarBase.TransactionBuilder(account, {
 ```
 
 
-## [Transaction](https://github.com/stellar/js-stellar-base/blob/master/src/transaction.js)
+## [Transaction](https://github.com/aiblocks/js-aiblocks-base/blob/master/src/transaction.js)
 
 You probably won't instantiate `Transaction` objects directly. Objects of this class are returned after `TransactionBuilder`
 builds a transaction. However, you can create a new `Transaction` object from a base64 representation of a transaction envelope.
@@ -112,13 +112,13 @@ Most importantly, you can sign a transaction using `sign()` method. See below...
 ## Signing and Multi-sig
 Transactions require signatures for authorization, and generally they only require one.  However, you can exercise more
 control over authorization and set up complex schemes by increasing the number of signatures a transaction requires.  For
-more, please consult the [multi-sig documentation](https://stellar.org/developers/learn/concepts/multi-sig.html).
+more, please consult the [multi-sig documentation](https://aiblocks.org/developers/learn/concepts/multi-sig.html).
 
 You add signatures to a transaction with the `Transaction.sign()` function. You can chain multiple `sign()` calls together.
 
 ## `Keypair` class
 
-`Keypair` object represents key pair used to sign transactions in Stellar network. `Keypair` object can contain both a public and private key, or only a public key.
+`Keypair` object represents key pair used to sign transactions in AiBlocks network. `Keypair` object can contain both a public and private key, or only a public key.
 
 If `Keypair` object does not contain private key it can't be used to sign transactions. The most convenient method of creating new keypair is by passing the account's secret seed:
 
@@ -147,15 +147,15 @@ var key1 = Keypair.fromSecret('SBK2VIYYSVG76E7VC3QHYARNFLY2EAQXDHRC7BMXBBGIFG74A
 var key2 = Keypair.fromSecret('SAMZUAAPLRUH62HH3XE7NVD6ZSMTWPWGM6DS4X47HLVRHEBKP4U2H5E7');
 
 // Create an Account object from an address and sequence number.
-var account=new StellarBase.Account("GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD","2319149195853854");
+var account=new AiBlocksBase.Account("GD6WU64OEP5C4LRBH6NK3MHYIA2ADN6K6II6EXPNVUR3ERBXT4AN4ACD","2319149195853854");
 
-var transaction = new StellarBase.TransactionBuilder(account, {
-    fee: StellarBase.BASE_FEE,
+var transaction = new AiBlocksBase.TransactionBuilder(account, {
+    fee: AiBlocksBase.BASE_FEE,
     networkPassphrase: Networks.TESTNET
 })
-        .addOperation(StellarBase.Operation.payment({
+        .addOperation(AiBlocksBase.Operation.payment({
                 destination: "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW",
-                asset: StellarBase.Asset.native(),
+                asset: AiBlocksBase.Asset.native(),
                 amount: "2000"  // 2000 XLM
             }))
         .setTimeout(30)
@@ -165,5 +165,3 @@ transaction.sign(key1);
 transaction.sign(key2);
 // submit tx to Horizon...
 ```
-
-
